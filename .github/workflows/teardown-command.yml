@@ -9,8 +9,6 @@ on:
 
 env:
   DOMAIN: ${{ format('{0}-{1}-pr{2}.surge.sh', github.event.repository.owner.login, github.event.repository.name, github.event.client_payload.pull_request.number) }}
-  SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
-  SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
 
 jobs:
   deploy:
@@ -22,16 +20,12 @@ jobs:
         run: |
           echo "Context: $CONTEXT"
 
-      - name: Cache npm
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: npm-
-  
       - name: Teardown surge.sh
         run: npx surge teardown ${{ env.DOMAIN }}
-
+        env:
+          SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+        
       - name: Add comment to PR
         uses: peter-evans/create-or-update-comment@v1
         with:
