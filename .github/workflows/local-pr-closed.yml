@@ -1,0 +1,19 @@
+# Queues a teardown command for every local PR closed.
+
+name: Local PR Closed
+
+on:
+  pull_request:
+    types: [ closed ]
+
+jobs:
+  dispatch-teardown-command:
+    if: github.repository == github.event.pull_request.head.repo.full_name
+    runs-on: ubuntu-latest
+    steps:
+    - name: Dispatch /teardown Command
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.DISPATCH_TOKEN }}
+        event-type: teardown-command
+        client-payload: '{"pull_request": ${{ toJson(github.event.pull_request) }}}'

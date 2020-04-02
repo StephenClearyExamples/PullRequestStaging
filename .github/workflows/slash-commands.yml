@@ -1,0 +1,20 @@
+# Translates slash-command in issue comments to repository-dispatch events.
+
+name: Slash command dispatch
+
+on:
+  issue_comment:
+    types: [ created ]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch slash command
+        uses: peter-evans/slash-command-dispatch@v1
+        with:
+          token: ${{ secrets.DISPATCH_TOKEN }}
+          reactions: false
+          issue-type: pull-request
+          permission: none
+          commands: deploy, teardown
