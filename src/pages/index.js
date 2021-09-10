@@ -1,3 +1,3 @@
 import React from "react"
 
-export default () => <div>Hello world from master branch!</div>
+export default () => <div>Hello world from vlad!</div>
